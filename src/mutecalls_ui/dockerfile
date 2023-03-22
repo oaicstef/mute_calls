@@ -1,0 +1,24 @@
+# Use an official Dart runtime as a parent image
+FROM google/dart
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install Flutter dependencies
+RUN apt-get update && \
+    apt-get install -y curl git unzip xz-utils zip libglu1-mesa && \
+    git clone https://github.com/flutter/flutter.git -b stable && \
+    export PATH="$PATH:`pwd`/flutter/bin" && \
+    flutter doctor
+
+# Build the Flutter app
+RUN flutter build apk --release
+
+# Expose port 8080
+EXPOSE 8080
+
+# Run the Flutter app
+CMD ["flutter", "run", "--release"]
