@@ -2,10 +2,16 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() => runApp(MyApp());
+String? apiURL = dotenv.env['API_URL'];
 
-class MyApp extends StatelessWidget {
+void main() async {
+  await dotenv.load();
+  runApp(MuteCallsApp());
+}
+
+class MuteCallsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,21 +22,21 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.blue,
         ),
       ),
-      home: MyHomePage(title: 'API Request Demo'),
+      home: HomePage(title: 'API Request Demo'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   String _responseText = '';
   bool _isLoading = false;
 
@@ -39,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _isLoading = true;
     });
 
-    final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts/2'));
+    final response = await http.get(Uri.parse('$apiURL/SendKeys'));
 
     setState(() {
       _isLoading = false;
